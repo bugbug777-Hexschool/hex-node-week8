@@ -1,0 +1,55 @@
+{
+	"info": {
+		"_postman_id": "34c53044-05d8-4eed-bf96-cac74f41fc2c",
+		"name": "Metawall - Upload",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19625896"
+	},
+	"item": [
+		{
+			"name": "圖片上傳",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOWNlN2IzOWQ0MmZlMmUzMjU4MWQzOSIsImlhdCI6MTY1NDQ1MDQ3MCwiZXhwIjoxNjU1MDU1MjcwfQ.6pbdTaqguk-WjJxhmaKVuabL_XPg-3f1zW_wqRnQLzg",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "",
+							"type": "file",
+							"src": "do_something_great.jpg",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"type": "file",
+							"src": "p56Zo56bj6ec.jpg",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"type": "file",
+							"src": "white-toshi-lySzv_cqxH8-unsplash.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{HEROKU}}/upload",
+					"host": [
+						"{{HEROKU}}"
+					],
+					"path": [
+						"upload"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
