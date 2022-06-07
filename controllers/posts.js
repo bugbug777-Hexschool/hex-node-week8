@@ -1,4 +1,5 @@
 const Post = require('../models/PostModel');
+const User = require('../models/UserModel');
 const successHandler = require('../service/successHandler')
 const appError = require('../service/appError');
 const asyncErrorHandler = require('../service/asyncErrorHandler');
@@ -93,6 +94,17 @@ const removeLike = asyncErrorHandler(async (req, res, next) => {
   successHandler(res, newPost, 201);
 });
 
+// 取得個人貼文列表
+const getPersonalPosts = asyncErrorHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const user = await User.findById(id).exec();
+  if (!user) return appError(400, '找不到該名使用者！', next);
+
+  const posts = await Post.find({ user });
+
+  successHandler(res, posts);
+});
+
 module.exports = {
   getPosts,
   getPost,
@@ -100,5 +112,6 @@ module.exports = {
   editPost,
   deletePosts,
   addLike,
-  removeLike
+  removeLike,
+  getPersonalPosts
 }

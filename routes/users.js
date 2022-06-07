@@ -13,5 +13,6 @@ router.get('/profile', checkAuth, UserController.getProfile);
 router.patch('/profile', checkAuth, UserController.updateProfile);
 router.delete('/', UserController.deleteUsers);
 router.get('/getLikeList', checkAuth, UserController.getLikeList);
+router.get('/:id', checkAuth, UserController.getLikeList);
 
 module.exports = router;
