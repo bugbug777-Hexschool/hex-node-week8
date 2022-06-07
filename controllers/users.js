@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const validator = require('validator');
 const User = require('../models/UserModel');
+const Post = require('../models/PostModel');
 const appError = require('../service/appError');
 const asyncErrorHandler = require('../service/asyncErrorHandler');
 const successHandler = require('../service/successHandler');
@@ -102,6 +103,18 @@ const deleteUsers = asyncErrorHandler(async (req, res, next) => {
   successHandler(res, []);
 });
 
+// 取得個人按讚列表
+const getLikeList = asyncErrorHandler(async (req, res, next) => {
+  const likeList = await Post
+  .find({ likes: { $in: [req.user.id] } })
+  .populate({
+    path: 'user',
+    select: '_id name'
+  })
+
+  successHandler(res, likeList);
+});
+
 module.exports = {
   getUsers,
   signUp,
@@ -109,5 +122,6 @@ module.exports = {
   updatePassword,
   getProfile,
   updateProfile,
-  deleteUsers
+  deleteUsers,
+  getLikeList
 }
