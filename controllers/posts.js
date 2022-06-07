@@ -67,10 +67,38 @@ const deletePosts = asyncErrorHandler(async (req, res) => {
   successHandler(res, []);
 });
 
+// 新增貼文按讚
+const addLike = asyncErrorHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const newPost = await Post.findByIdAndUpdate(
+    id,
+    { $addToSet: { likes: req.user.id }},
+    { new: true }
+  )
+
+  if (!newPost) return appError(400, '找不到該筆貼文！', next);
+  successHandler(res, newPost, 201);
+});
+
+// 取消貼文按讚
+const removeLike = asyncErrorHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const newPost = await Post.findByIdAndUpdate(
+    id,
+    { $pull: { likes: req.user.id }},
+    { new: true }
+  )
+
+  if (!newPost) return appError(400, '找不到該筆貼文！', next);
+  successHandler(res, newPost, 201);
+});
+
 module.exports = {
   getPosts,
   getPost,
   addPost,
   editPost,
-  deletePosts
+  deletePosts,
+  addLike,
+  removeLike
 }
