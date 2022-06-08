@@ -34,7 +34,7 @@ const signUp = asyncErrorHandler(async (req, res, next) => {
   if (!name || !email || !password) return appError(400, '欄位資訊不能為空！', next);
   if (!validator.isAlphanumeric(name)) return appError(400, '名稱只能是英數字的組合！', next);
   if (!validator.isEmail(email)) return appError(400, 'Email 格式不符合！', next);
-  if (!validator.isLength(password, {min: 8, max: 16})) return appError(400, '密碼長度只能介於 8 到 16 碼！', next);
+  if (!validator.isLength(password, { min: 8, max: 16 })) return appError(400, '密碼長度只能介於 8 到 16 碼！', next);
 
   const isRegistered = await User.findOne({email: email});
   if (isRegistered) return appError(400, '該電子信箱已被使用者註冊！', next);
@@ -59,10 +59,12 @@ const signIn = asyncErrorHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) return appError(400, '帳號密碼不能為空！', next);
-  const user = await User.findOne({email}).select('+password');
+  const user = await User.findOne({ email }).select('+password');
+
+  if (!user) return appError(400, '帳號或密碼錯誤！', next);
   const isConfirmed = await bcrypt.compare(password, user.password);
 
-  if (!isConfirmed) return appError(400, '帳號密碼錯誤！', next);
+  if (!isConfirmed) return appError(400, '帳號或密碼錯誤！', next);
   const token = await generateToken(user);
 
   successHandler(res, {
@@ -73,14 +75,17 @@ const signIn = asyncErrorHandler(async (req, res, next) => {
 
 // 重設密碼
 const updatePassword = asyncErrorHandler(async (req, res, next) => {
-  const user = req.user;
   let { password, confirmedPassword } = req.body;
 
-  if (!validator.isLength(password, {min: 8, max: 16})) return appError(400, '密碼長度只能介於 8 到 16 碼！', next);
+  if (!password || !confirmedPassword) return appError(400, '欄位資訊不能為空！', next);
+  if (!validator.isLength(password, { min: 8, max: 16 })) return appError(400, '密碼長度只能介於 8 到 16 碼！', next);
   if (password !== confirmedPassword) return appError(400, '密碼不一致！', next);
 
   password = await bcrypt.hash(password, 12);
-  const editedUser = await User.findByIdAndUpdate(user._id, {password}, {new:true});
+  const editedUser = await User.findByIdAndUpdate(
+    req.user._id,
+    { password }
+  );
 
   const token = await generateToken(editedUser);
 
