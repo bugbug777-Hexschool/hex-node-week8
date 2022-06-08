@@ -86,16 +86,15 @@ const removeLike = asyncErrorHandler(async (req, res, next) => {
 
 // 新增使用者留言
 const addComment = asyncErrorHandler(async (req, res, next) => {
-  const { id } = req.params;
+  const postId = req.params.id;
   const { comment } = req.body;
 
-  const post = await Post.findById(id).exec();
-  console.log(post);
+  const post = await Post.findById(postId);
   if (!post) return appError(400, '該貼文不存在！', next);
   
   if (!comment) return appError(400, '留言內容不能為空！', next);
   const newComment = await Comment.create({
-    post: id,
+    post: postId,
     user: req.user.id,
     comment
   });
