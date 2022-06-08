@@ -60,9 +60,9 @@ const signIn = asyncErrorHandler(async (req, res, next) => {
 
   if (!email || !password) return appError(400, '帳號密碼不能為空！', next);
   const user = await User.findOne({email}).select('+password');
-  const confirmed = await bcrypt.compare(password, user.password);
+  const isConfirmed = await bcrypt.compare(password, user.password);
 
-  if (!confirmed) return appError(400, '帳號密碼錯誤！', next);
+  if (!isConfirmed) return appError(400, '帳號密碼錯誤！', next);
   const token = await generateToken(user);
 
   successHandler(res, {
