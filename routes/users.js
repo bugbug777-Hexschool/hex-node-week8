@@ -5,14 +5,19 @@ const UserController = require('../controllers/users');
 
 /* GET users listing. */
 
+// 通用
 router.get('/', UserController.getUsers);
+router.delete('/', UserController.deleteUsers);
+
 router.post('/sign_up', UserController.signUp);
 router.post('/sign_in', UserController.signIn);
-router.post('/updatePassword', checkAuth, UserController.updatePassword);
 router.get('/profile', checkAuth, UserController.getProfile);
 router.patch('/profile', checkAuth, UserController.updateProfile);
-router.delete('/', UserController.deleteUsers);
+router.post('/updatePassword', checkAuth, UserController.updatePassword);
+
 router.get('/getLikeList', checkAuth, UserController.getLikeList);
-router.get('/:id', checkAuth, UserController.getLikeList);
+router.get('/following', checkAuth, UserController.getFollowingList);
+router.post('/:id/follow', checkAuth, UserController.followUser);
+router.delete('/:id/unfollow', checkAuth, UserController.unfollowUser);
 
 module.exports = router;

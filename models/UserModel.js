@@ -24,6 +24,30 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, '電子信箱為必填']
     },
+    followers: [
+      {
+        user: {
+          type: mongoose.Schema.ObjectId,
+          ref: 'User'
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now
+        }
+      }
+    ],
+    following: [
+      {
+        user: {
+          type: mongoose.Schema.ObjectId,
+          ref: 'User'
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now
+        }
+      }
+    ],
     createdAt: {
       type: Date,
       default: Date.now,
