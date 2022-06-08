@@ -5,6 +5,10 @@ const successHandler = require('../service/successHandler')
 const appError = require('../service/appError');
 const asyncErrorHandler = require('../service/asyncErrorHandler');
 
+//////
+//  動態貼文
+////
+
 // 取得所有貼文
 const getPosts = asyncErrorHandler(async (req, res) => {
   const { sort=-1, keyword } = req.query;
@@ -40,21 +44,6 @@ const getPost = asyncErrorHandler(async (req, res, next) => {
   successHandler(res, post);
 });
 
-// 取得個人貼文列表
-const getPersonalPosts = asyncErrorHandler(async (req, res, next) => {
-  const { id } = req.params;
-  const user = await User.findById(id).exec();
-  if (!user) return appError(400, '找不到該名使用者！', next);
-
-  const posts = await Post.find({ user })
-  .populate({
-    path: 'comments',
-    select: 'comment user'
-  });;
-
-  successHandler(res, posts);
-});
-
 // 新增單筆貼文
 const addPost = asyncErrorHandler(async (req, res, next) => {
   const { id } = req.user;
@@ -67,31 +56,6 @@ const addPost = asyncErrorHandler(async (req, res, next) => {
   });
 
   successHandler(res, newPost);
-});
-
-// 編輯單筆貼文
-const editPost = asyncErrorHandler(async (req, res, next) => {
-  const { id } = req.params;
-  const { content } = req.body
-
-  if (!content) return appError(400, '貼文修改能容不能為空！');
-  const post = await Post.findById(id);
-
-  if (!post) return appError(400, '該貼文不存在！', next);
-  if (req.user.id !== post.user._id) return appError(400, '非該貼文作者不能修改該貼文！', next);
-  const editedPost = await Post.findByIdAndUpdate(
-    id,
-    { content },
-    { new: true }
-  )
-
-  successHandler(res, editedPost);
-});
-
-// 刪除所有貼文
-const deletePosts = asyncErrorHandler(async (req, res) => {
-  await Post.deleteMany({});
-  successHandler(res, []);
 });
 
 // 新增貼文按讚
@@ -139,14 +103,58 @@ const addComment = asyncErrorHandler(async (req, res, next) => {
   successHandler(res, newComment, 201);
 });
 
+// 取得個人貼文列表
+const getPersonalPosts = asyncErrorHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const user = await User.findById(id).exec();
+  if (!user) return appError(400, '找不到該名使用者！', next);
+
+  const posts = await Post.find({ user })
+  .populate({
+    path: 'comments',
+    select: 'comment user'
+  });;
+
+  successHandler(res, posts);
+});
+
+//////
+//  輔助測試
+////
+
+// 編輯單筆貼文
+const editPost = asyncErrorHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const { content } = req.body
+
+  if (!content) return appError(400, '貼文修改能容不能為空！');
+  const post = await Post.findById(id);
+
+  if (!post) return appError(400, '該貼文不存在！', next);
+  if (req.user.id !== post.user._id) return appError(400, '非該貼文作者不能修改該貼文！', next);
+  const editedPost = await Post.findByIdAndUpdate(
+    id,
+    { content },
+    { new: true }
+  )
+
+  successHandler(res, editedPost);
+});
+
+// 刪除所有貼文
+const deletePosts = asyncErrorHandler(async (req, res) => {
+  await Post.deleteMany({});
+  successHandler(res, []);
+});
+
 module.exports = {
   getPosts,
   getPost,
-  getPersonalPosts,
   addPost,
-  editPost,
-  deletePosts,
   addLike,
   removeLike,
-  addComment
+  addComment,
+  getPersonalPosts,
+  editPost,
+  deletePosts
 }

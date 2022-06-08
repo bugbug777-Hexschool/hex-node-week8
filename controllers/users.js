@@ -7,13 +7,27 @@ const asyncErrorHandler = require('../service/asyncErrorHandler');
 const successHandler = require('../service/successHandler');
 const { generateToken } = require('../service/auth');
 
+//////
+//  輔助測試
+////
+
 // 取得所有使用者
 const getUsers = asyncErrorHandler(async (req, res, next) => {
   const users = await User.find();
   successHandler(res, users);
 });
 
-// 新增使用者，使用者註冊
+// 刪除所有使用者
+const deleteUsers = asyncErrorHandler(async (req, res, next) => {
+  await User.deleteMany({});
+  successHandler(res, []);
+});
+
+//////
+//  會員功能
+////
+
+// 註冊會員
 const signUp = asyncErrorHandler(async (req, res, next) => {
   let { name, email, password } = req.body;
 
@@ -40,7 +54,7 @@ const signUp = asyncErrorHandler(async (req, res, next) => {
   }, 201);
 });
 
-// 使用者登入
+// 登入會員
 const signIn = asyncErrorHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -57,7 +71,7 @@ const signIn = asyncErrorHandler(async (req, res, next) => {
   });
 });
 
-// 更新密碼
+// 重設密碼
 const updatePassword = asyncErrorHandler(async (req, res, next) => {
   const user = req.user;
   let { password, confirmedPassword } = req.body;
@@ -76,13 +90,13 @@ const updatePassword = asyncErrorHandler(async (req, res, next) => {
   });
 });
 
-// 取得使用者個人資料
+// 取得個人資料
 const getProfile = asyncErrorHandler(async (req, res, next) => {
   const user = req.user;
   successHandler(res, user);
 });
 
-// 更新使用者個人資訊
+// 更新個人資料
 const updateProfile = asyncErrorHandler(async (req, res, next) => {
   const user = req.user;
   const { name, gender, avatar } = req.body;
@@ -97,25 +111,11 @@ const updateProfile = asyncErrorHandler(async (req, res, next) => {
   successHandler(res, editedUser);
 });
 
-// 刪除所有使用者
-const deleteUsers = asyncErrorHandler(async (req, res, next) => {
-  await User.deleteMany({});
-  successHandler(res, []);
-});
+//////
+//  會員按讚追蹤功能
+////
 
-// 取得個人按讚列表
-const getLikeList = asyncErrorHandler(async (req, res, next) => {
-  const likeList = await Post
-  .find({ likes: { $in: [req.user.id] } })
-  .populate({
-    path: 'user',
-    select: '_id name'
-  })
-
-  successHandler(res, likeList);
-});
-
-// 追蹤使用者
+// 追蹤朋友
 const followUser = asyncErrorHandler(async (req, res, next) => {
   const followingUser = await User.findById(req.params.id);
   if (!followingUser) return appError(400, '沒有該名使用者！', next);
@@ -142,6 +142,7 @@ const followUser = asyncErrorHandler(async (req, res, next) => {
   successHandler(res, {message: '成功追蹤！'});
 });
 
+// 取消追蹤朋友
 const unfollowUser = asyncErrorHandler(async (req, res, next) => {
   const followingUser = await User.findById(req.params.id);
   if (!followingUser) return appError(400, '沒有該名使用者！', next);
@@ -162,6 +163,19 @@ const unfollowUser = asyncErrorHandler(async (req, res, next) => {
   successHandler(res, {message: '成功取消追蹤！'});
 });
 
+// 取得個人按讚列表
+const getLikeList = asyncErrorHandler(async (req, res, next) => {
+  const likeList = await Post
+  .find({ likes: { $in: [req.user.id] } })
+  .populate({
+    path: 'user',
+    select: '_id name'
+  })
+
+  successHandler(res, likeList);
+});
+
+// 取得個人追蹤名單
 const getFollowingList = asyncErrorHandler(async (req, res, next) => {
   const followingList = await User
   .findById(req.user.id)
@@ -175,14 +189,14 @@ const getFollowingList = asyncErrorHandler(async (req, res, next) => {
 
 module.exports = {
   getUsers,
+  deleteUsers,
   signUp,
   signIn,
-  updatePassword,
   getProfile,
   updateProfile,
-  deleteUsers,
-  getLikeList,
+  updatePassword,
   followUser,
   unfollowUser,
+  getLikeList,
   getFollowingList
 }
