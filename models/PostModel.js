@@ -2,16 +2,6 @@ const mongoose = require('mongoose');
 
 const postSchema = new mongoose.Schema(
   {
-    tags: [
-      {
-        type: String,
-        required: [true, '貼文標籤不能為空 ']
-      }
-    ],
-    type: {
-      type: String,
-      enum: ['person', 'group']
-    },
     user: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
