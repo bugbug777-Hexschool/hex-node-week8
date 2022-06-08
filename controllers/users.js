@@ -36,8 +36,8 @@ const signUp = asyncErrorHandler(async (req, res, next) => {
   if (!validator.isEmail(email)) return appError(400, 'Email 格式不符合！', next);
   if (!validator.isLength(password, {min: 8, max: 16})) return appError(400, '密碼長度只能介於 8 到 16 碼！', next);
 
-  const hasEmail = await User.findOne({email: email}).exec();
-  if (hasEmail) return appError(400, '該電子信箱已被使用者註冊！', next);
+  const isRegistered = await User.findOne({email: email});
+  if (isRegistered) return appError(400, '該電子信箱已被使用者註冊！', next);
 
   password = await bcrypt.hash(password, 12);
   const newUser = await User.create({
