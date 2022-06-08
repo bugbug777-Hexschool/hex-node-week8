@@ -103,16 +103,15 @@ const getProfile = asyncErrorHandler(async (req, res, next) => {
 
 // 更新個人資料
 const updateProfile = asyncErrorHandler(async (req, res, next) => {
-  const user = req.user;
   const { name, gender, avatar } = req.body;
 
-  if (!name || !gender) return  appError(400, '欄位資訊不能為空！', next);
-
+  if (!name || !gender) return appError(400, '欄位資訊不能為空！', next);
   const editedUser = await User.findByIdAndUpdate(
-    {_id: user._id},
-    {name, gender, avatar},
-    {new: true}
+    { _id: req.user._id },
+    { name, gender, avatar },
+    { new: true }
   );
+  
   successHandler(res, editedUser);
 });
 
