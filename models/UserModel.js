@@ -4,12 +4,16 @@ const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, '使用者名稱為必填']
+      required: [true, '使用者暱稱為必填欄位！']
     },
     password: {
       type: String,
-      required: [true, '使用者密碼為必填'],
+      required: [true, '使用者密碼為必填欄位！'],
       select: false
+    },
+    email: {
+      type: String,
+      required: [true, '使用者電子信箱為必填欄位！']
     },
     gender: {
       type: String,
@@ -19,10 +23,6 @@ const userSchema = new mongoose.Schema(
     avatar: {
       type: String,
       default: ''
-    },
-    email: {
-      type: String,
-      required: [true, '電子信箱為必填']
     },
     followers: [
       {
