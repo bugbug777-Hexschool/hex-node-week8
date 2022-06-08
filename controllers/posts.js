@@ -26,11 +26,15 @@ const getPosts = asyncErrorHandler(async (req, res) => {
 // 取得單筆貼文
 const getPost = asyncErrorHandler(async (req, res, next) => {
   const { id } = req.params;
-  const post = await Post.findById(id).populate(
-    {
-      path: 'user',
-      select: 'name'
-    });
+  const post = await Post.findById(id)
+  .populate({
+    path: 'user',
+    select: 'name'
+  })
+  .populate({
+    path: 'comments',
+    select: 'comment user'
+  });
 
   if (!post) return appError(400, '該貼文不存在！', next);
   successHandler(res, post);
@@ -56,7 +60,11 @@ const getPersonalPosts = asyncErrorHandler(async (req, res, next) => {
   const user = await User.findById(id).exec();
   if (!user) return appError(400, '找不到該名使用者！', next);
 
-  const posts = await Post.find({ user });
+  const posts = await Post.find({ user })
+  .populate({
+    path: 'comments',
+    select: 'comment user'
+  });;
 
   successHandler(res, posts);
 });
