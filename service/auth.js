@@ -37,6 +37,7 @@ const checkAuth = asyncErrorHandler(async (req, res, next) => {
   const payload = await verifyToken(token);
   const user = await User.findById(payload.id);
 
+  if (!user) return appError(400, '該使用者不存在！', next);
   req.user = user;
 
   next();
