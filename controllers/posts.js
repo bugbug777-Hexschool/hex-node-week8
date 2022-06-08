@@ -29,8 +29,8 @@ const getPosts = asyncErrorHandler(async (req, res) => {
 
 // 取得單筆貼文
 const getPost = asyncErrorHandler(async (req, res, next) => {
-  const { id } = req.params;
-  const post = await Post.findById(id)
+  const postId = req.params.id;
+  const post = await Post.findById(postId)
   .populate({
     path: 'user',
     select: 'name'
