@@ -1,5 +1,6 @@
 const Post = require('../models/PostModel');
 const User = require('../models/UserModel');
+const Comment = require('../models/CommentModel'); // 沒匯入，還會不給用的
 const successHandler = require('../service/successHandler')
 const appError = require('../service/appError');
 const asyncErrorHandler = require('../service/asyncErrorHandler');
@@ -8,11 +9,17 @@ const asyncErrorHandler = require('../service/asyncErrorHandler');
 const getPosts = asyncErrorHandler(async (req, res) => {
   const { sort=-1, keyword } = req.query;
   const regex = new RegExp(keyword);
-  const posts = await Post.find({ content: regex}).populate(
-    {
+  const posts = await Post
+  .find({ content: regex})
+  .populate({
       path: 'user',
       select: 'name'
-    }).sort({ createdAt: sort });
+  })
+  .populate({
+    path: 'comments',
+    select: 'comment user'
+  })
+  .sort({ createdAt: sort });
   successHandler(res, posts);
 });
 

@@ -31,19 +31,24 @@ const postSchema = new mongoose.Schema(
         ref: 'User'
       }
     ],
-    comments: {
-      type: Number,
-      default: 0
-    },
     createdAt: {
       type: Date,
       default: Date.now,
     },
   },
   {
-    versionKey: false
+    versionKey: false,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
   }
 );
+
+// 虛擬欄位
+postSchema.virtual('comments', {
+  ref: 'Comment',
+  localField: '_id',
+  foreignField: 'post'
+})
 
 const PostModel = mongoose.model('Post', postSchema);
 
