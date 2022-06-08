@@ -21,9 +21,9 @@ const commentSchema = new mongoose.Schema(
       default: Date.now
     }
   },
-  // {
-  //   versionKey: false
-  // }
+  {
+    versionKey: false
+  }
 )
 
 commentSchema.pre(/^find/, function(next) {

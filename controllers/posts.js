@@ -50,6 +50,17 @@ const addPost = asyncErrorHandler(async (req, res, next) => {
   successHandler(res, newPost);
 });
 
+// 取得個人貼文列表
+const getPersonalPosts = asyncErrorHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const user = await User.findById(id).exec();
+  if (!user) return appError(400, '找不到該名使用者！', next);
+
+  const posts = await Post.find({ user });
+
+  successHandler(res, posts);
+});
+
 // 編輯單筆貼文
 const editPost = asyncErrorHandler(async (req, res, next) => {
   const { id } = req.params;
@@ -101,24 +112,33 @@ const removeLike = asyncErrorHandler(async (req, res, next) => {
   successHandler(res, newPost, 201);
 });
 
-// 取得個人貼文列表
-const getPersonalPosts = asyncErrorHandler(async (req, res, next) => {
+// 新增使用者留言
+const addComment = asyncErrorHandler(async (req, res, next) => {
   const { id } = req.params;
-  const user = await User.findById(id).exec();
-  if (!user) return appError(400, '找不到該名使用者！', next);
+  const { comment } = req.body;
 
-  const posts = await Post.find({ user });
+  const post = await Post.findById(id).exec();
+  console.log(post);
+  if (!post) return appError(400, '該貼文不存在！', next);
+  
+  if (!comment) return appError(400, '留言內容不能為空！', next);
+  const newComment = await Comment.create({
+    post: id,
+    user: req.user.id,
+    comment
+  });
 
-  successHandler(res, posts);
+  successHandler(res, newComment, 201);
 });
 
 module.exports = {
   getPosts,
   getPost,
+  getPersonalPosts,
   addPost,
   editPost,
   deletePosts,
   addLike,
   removeLike,
-  getPersonalPosts
+  addComment
 }
