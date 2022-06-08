@@ -40,20 +40,6 @@ const getPost = asyncErrorHandler(async (req, res, next) => {
   successHandler(res, post);
 });
 
-// 新增單筆貼文
-const addPost = asyncErrorHandler(async (req, res, next) => {
-  const { id } = req.user;
-  const { content, photo } = req.body;
-
-  const newPost = await Post.create({
-    user: id,
-    content,
-    photo
-  });
-
-  successHandler(res, newPost);
-});
-
 // 取得個人貼文列表
 const getPersonalPosts = asyncErrorHandler(async (req, res, next) => {
   const { id } = req.params;
@@ -67,6 +53,20 @@ const getPersonalPosts = asyncErrorHandler(async (req, res, next) => {
   });;
 
   successHandler(res, posts);
+});
+
+// 新增單筆貼文
+const addPost = asyncErrorHandler(async (req, res, next) => {
+  const { id } = req.user;
+  const { content, photo } = req.body;
+
+  const newPost = await Post.create({
+    user: id,
+    content,
+    photo
+  });
+
+  successHandler(res, newPost);
 });
 
 // 編輯單筆貼文
