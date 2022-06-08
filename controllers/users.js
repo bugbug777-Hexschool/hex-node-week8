@@ -111,7 +111,7 @@ const updateProfile = asyncErrorHandler(async (req, res, next) => {
     { name, gender, avatar },
     { new: true }
   );
-  
+
   successHandler(res, editedUser);
 });
 
@@ -122,23 +122,23 @@ const updateProfile = asyncErrorHandler(async (req, res, next) => {
 // 追蹤朋友
 const followUser = asyncErrorHandler(async (req, res, next) => {
   const followingUser = await User.findById(req.params.id);
-  if (!followingUser) return appError(400, '沒有該名使用者！', next);
 
+  if (!followingUser) return appError(400, '該使用者不存在！', next);
   if (req.params.id === req.user.id) return appError(401, '使用者不允許追蹤自己！', next);
 
-  // following users
+  // 使用者自己。 如果在 following.user 中有追蹤朋友的 id 就過濾掉
   await User.updateOne(
     {
       _id: req.user.id,
-      'following.user': { $ne: req.params.id }
+      'following.user': { $ne: followingUser.id }
     },
-    { $addToSet: { following: { user: req.params.id } } }
+    { $addToSet: { following: { user: followingUser.id } } }
   );
 
-  // followers
+  // 追蹤的朋友。 如果在 followers.user 中有使用者自己的 id 就過濾掉
   await User.updateOne(
     { 
-      _id: req.params.id,
+      _id: followingUser.id,
       'followers.user': { $ne: req.user.id }
     },
     { $addToSet: { followers: { user: req.user.id } } }
@@ -148,20 +148,20 @@ const followUser = asyncErrorHandler(async (req, res, next) => {
 
 // 取消追蹤朋友
 const unfollowUser = asyncErrorHandler(async (req, res, next) => {
-  const followingUser = await User.findById(req.params.id);
-  if (!followingUser) return appError(400, '沒有該名使用者！', next);
+  const unFollowingUser = await User.findById(req.params.id);
+  if (!unFollowingUser) return appError(400, '該使用者不存在！', next);
 
-  if (req.params.id === req.user.id) return appError(401, '使用者不允許取消追蹤自己！');
+  if (unFollowingUser.id === req.user.id) return appError(401, '使用者不允許取消追蹤自己！');
 
-  // following users
+  // 使用者自己
   await User.updateOne(
     { _id: req.user.id },
-    { $pull: { following: { user: req.params.id } } }
+    { $pull: { following: { user: unFollowingUser.id } } }
   );
 
-  // followers
+  // 追蹤的朋友
   await User.updateOne(
-    { _id: req.params.id },
+    { _id: unFollowingUser.id },
     { $pull: { followers: { user: req.user.id } } }
   );
   successHandler(res, {message: '成功取消追蹤！'});
@@ -181,14 +181,14 @@ const getLikeList = asyncErrorHandler(async (req, res, next) => {
 
 // 取得個人追蹤名單
 const getFollowingList = asyncErrorHandler(async (req, res, next) => {
-  const followingList = await User
+  const user = await User
   .findById(req.user.id)
   .populate({
     path: 'following.user',
     select: 'name id'
   });
 
-  successHandler(res, followingList);
+  successHandler(res, user.following);
 });
 
 module.exports = {
