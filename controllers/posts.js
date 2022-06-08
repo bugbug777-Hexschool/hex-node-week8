@@ -21,7 +21,7 @@ const getPosts = asyncErrorHandler(async (req, res) => {
   })
   .populate({
     path: 'comments',
-    select: 'comment user'
+    select: 'comment user -post'
   })
   .sort({ createdAt: sort });
   successHandler(res, posts);
@@ -37,7 +37,7 @@ const getPost = asyncErrorHandler(async (req, res, next) => {
   })
   .populate({
     path: 'comments',
-    select: 'comment user'
+    select: 'comment user -post'
   });
 
   if (!post) return appError(400, '該貼文不存在！', next);
@@ -104,14 +104,14 @@ const addComment = asyncErrorHandler(async (req, res, next) => {
 
 // 取得個人貼文列表
 const getPersonalPosts = asyncErrorHandler(async (req, res, next) => {
-  const { id } = req.params;
-  const user = await User.findById(id).exec();
+  const userId  = req.params.id;
+  const user = await User.findById(userId);
   if (!user) return appError(400, '找不到該名使用者！', next);
 
   const posts = await Post.find({ user })
   .populate({
     path: 'comments',
-    select: 'comment user'
+    select: 'comment user -post'
   });;
 
   successHandler(res, posts);
