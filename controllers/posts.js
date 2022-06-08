@@ -46,11 +46,11 @@ const getPost = asyncErrorHandler(async (req, res, next) => {
 
 // 新增單筆貼文
 const addPost = asyncErrorHandler(async (req, res, next) => {
-  const { id } = req.user;
   const { content, photo } = req.body;
 
+  if (!content) return appError(400, '貼文內容不能為空！', next);
   const newPost = await Post.create({
-    user: id,
+    user: req.user.id,
     content,
     photo
   });
@@ -60,9 +60,9 @@ const addPost = asyncErrorHandler(async (req, res, next) => {
 
 // 新增貼文按讚
 const addLike = asyncErrorHandler(async (req, res, next) => {
-  const { id } = req.params;
+  const postId = req.params.id;
   const newPost = await Post.findByIdAndUpdate(
-    id,
+    postId,
     { $addToSet: { likes: req.user.id }},
     { new: true }
   )
@@ -73,9 +73,9 @@ const addLike = asyncErrorHandler(async (req, res, next) => {
 
 // 取消貼文按讚
 const removeLike = asyncErrorHandler(async (req, res, next) => {
-  const { id } = req.params;
+  const postId = req.params.id;
   const newPost = await Post.findByIdAndUpdate(
-    id,
+    postId,
     { $pull: { likes: req.user.id }},
     { new: true }
   )
