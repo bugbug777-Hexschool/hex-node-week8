@@ -1,0 +1,108 @@
+{
+	"info": {
+		"_postman_id": "903d9544-8492-4a2d-a648-39a53f0520fb",
+		"name": "會員按讚追蹤動態",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19625896"
+	},
+	"item": [
+		{
+			"name": "追蹤朋友",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{JWT_TOKEN}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{API_BASE}}/users/{{user_id}}/follow",
+					"host": [
+						"{{API_BASE}}"
+					],
+					"path": [
+						"users",
+						"{{user_id}}",
+						"follow"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "取消追蹤朋友",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{JWT_TOKEN}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{API_BASE}}/users/{{user_id}}/unfollow",
+					"host": [
+						"{{API_BASE}}"
+					],
+					"path": [
+						"users",
+						"{{user_id}}",
+						"unfollow"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "取得個人按讚列表",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{JWT_TOKEN}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{API_BASE}}/users/getLikeList",
+					"host": [
+						"{{API_BASE}}"
+					],
+					"path": [
+						"users",
+						"getLikeList"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "取得個人追蹤名單",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{JWT_TOKEN}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{API_BASE}}/users/following",
+					"host": [
+						"{{API_BASE}}"
+					],
+					"path": [
+						"users",
+						"following"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

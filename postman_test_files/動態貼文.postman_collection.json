@@ -1,0 +1,211 @@
+{
+	"info": {
+		"_postman_id": "32003c84-e0b2-46f5-bae2-3f57ba3a9c43",
+		"name": "動態貼文",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19625896"
+	},
+	"item": [
+		{
+			"name": "取得所有貼文",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{JWT_TOKEN}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{API_BASE}}/posts",
+					"host": [
+						"{{API_BASE}}"
+					],
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "取得單一貼文",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{JWT_TOKEN}}",
+						"description": "Demon",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{API_BASE}}/posts/{{post_id}}",
+					"host": [
+						"{{API_BASE}}"
+					],
+					"path": [
+						"posts",
+						"{{post_id}}"
+					],
+					"query": [
+						{
+							"key": "keyword",
+							"value": "測試",
+							"disabled": true
+						},
+						{
+							"key": "sort",
+							"value": "-1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "新增貼文",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{JWT_TOKEN}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"content\": \"The post is created by Kara\",\n    \"photo\": \"https://images.unsplash.com/photo-1504805572947-34fad45aed93?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1200&q=80\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE}}/posts",
+					"host": [
+						"{{API_BASE}}"
+					],
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "新增一則貼文的讚",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{JWT_TOKEN}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{API_BASE}}/posts/{{post_id}}/like",
+					"host": [
+						"{{API_BASE}}"
+					],
+					"path": [
+						"posts",
+						"{{post_id}}",
+						"like"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "取消一則貼文的讚",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{JWT_TOKEN}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{API_BASE}}/posts/{{post_id}}/unlike",
+					"host": [
+						"{{API_BASE}}"
+					],
+					"path": [
+						"posts",
+						"{{post_id}}",
+						"unlike"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "新增一則貼文的留言",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{JWT_TOKEN}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"comment\": \"Today is a good day today!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE}}/posts/{{post_id}}/comment",
+					"host": [
+						"{{API_BASE}}"
+					],
+					"path": [
+						"posts",
+						"{{post_id}}",
+						"comment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "取得個人所有貼文列表",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{JWT_TOKEN}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{API_BASE}}/posts/user/{{user_id}}",
+					"host": [
+						"{{API_BASE}}"
+					],
+					"path": [
+						"posts",
+						"user",
+						"{{user_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,95 @@
+{
+	"info": {
+		"_postman_id": "697c8dc9-7de9-46f8-aeca-d7ab8281b81a",
+		"name": "輔助測試功能",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19625896"
+	},
+	"item": [
+		{
+			"name": "取得所有使用者",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_BASE}}/users",
+					"host": [
+						"{{API_BASE}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "編輯貼文",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOWNjZGYwNDNjOTFjY2U3MDJmMDYzOSIsImlhdCI6MTY1NDQ0MzUwNCwiZXhwIjoxNjU1MDQ4MzA0fQ.V1tei1dhZKfLPvKuLbvlXHV2vLqQFMrJpDPIKRumHXg",
+						"description": "Demon",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"content\": \"修改過的貼文！\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE}}/posts/{{post_id}}",
+					"host": [
+						"{{API_BASE}}"
+					],
+					"path": [
+						"posts",
+						"{{post_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "刪除所有貼文",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{API_BASE}}/posts",
+					"host": [
+						"{{API_BASE}}"
+					],
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "刪除所有使用者",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{API_BASE}}/users",
+					"host": [
+						"{{API_BASE}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
